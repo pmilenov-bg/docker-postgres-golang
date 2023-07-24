@@ -1,0 +1,37 @@
+volumes:
+  pg_data:
+
+  version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: golang
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: golang
+      # -     LANG: bg_BG.utf8
+      # -     POSTGRES_INITDB_ARGS: "--locale=bg_BG.UTF-8" # Set the default locale to Bulgarian Cyrillic
+
+      POSTGRES_MAX_CONNECTIONS: 10
+      POSTGRES_SHARED_BUFFERS: 256MB
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    #  - ./custom_postgresql.conf:/etc/postgresql/postgresql.conf
+    networks:
+      - backend
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
